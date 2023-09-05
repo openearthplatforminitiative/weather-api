@@ -7,6 +7,13 @@ from weather_api.version import __version__
 router = APIRouter()
 
 
+@router.get(
+    "/",
+)
+async def root() -> dict[str, str]:
+    return {"message": "Ok"}
+
+
 @router.get("/health", tags=["health"])
 async def liveness() -> dict[str, str]:
     return {"message": "Ok"}
