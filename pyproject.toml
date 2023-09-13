@@ -18,6 +18,7 @@ pydantic = "1.10.11"
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 pytest = "^7.4.0"
+pulumi-awsx = "^1.0.5"
 
 [build-system]
 requires = ["poetry-core"]

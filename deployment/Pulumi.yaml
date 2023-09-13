@@ -1,0 +1,6 @@
+name: weather-api
+description: Pulumi project for managing the deployment of the weather-api
+runtime: python
+stackConfigDir: stacks/
+
+
