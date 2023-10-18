@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
-from weather_api.routes import system_resources
-from weather_api.routes import weather_routes
+from weather_api.routes import system_resources, weather_routes
 from weather_api.version import __version__
 
 

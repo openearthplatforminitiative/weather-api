@@ -30,3 +30,12 @@ class MetService:
                 return TypeAdapter(METJSONSunrise).validate_python(
                     await response.json()
                 )
+
+    async def health_check(self) -> tuple[bool, str]:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"{settings.met_api_url}/locationforecast/2.0/healthz"
+            ) as response:
+                if response.status == 200:
+                    return True, "Met API is healthy"
+                return False, "Met API is unhealthy"
