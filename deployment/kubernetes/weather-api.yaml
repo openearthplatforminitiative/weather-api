@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weather-api
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: weather-api
+  template:
+    metadata:
+      labels:
+        app: weather-api
+    spec:
+      containers:
+      - image: ghcr.io/openearthplatforminitiative/weather-api:0.0.3
+        name: weather-api
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weather-api
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: weather-api
+---
+apiVersion: apisix.apache.org/v2
+kind: ApisixRoute
+metadata:
+  name: weather-api
+spec:
+  http:
+    - name: weather-api
+      match:
+        paths:
+          - /weather/*
+      backends:
+        - serviceName: weather-api
+          servicePort: 80
+      plugins:
+        - name: proxy-rewrite
+          enable: true
+          config:
+            regex_uri:
+              - "^/weather/(.*)"
+              - "/$1"
