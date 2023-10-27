@@ -14,10 +14,13 @@ spec:
         app: weather-api
     spec:
       containers:
-      - image: ghcr.io/openearthplatforminitiative/weather-api:0.0.3
+      - image: ghcr.io/openearthplatforminitiative/weather-api:0.0.5
         name: weather-api
         ports:
         - containerPort: 8080
+        env:
+        - name: API_ROOT_PATH
+          value: "/weather"
 ---
 apiVersion: v1
 kind: Service
