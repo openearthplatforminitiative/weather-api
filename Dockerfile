@@ -1,21 +1,13 @@
-# TODO RUN AS NON ROOT USER
-
 FROM python:3.11-slim
+ENV POETRY_VIRTUALENVS_CREATE=false \
+    UVICORN_RELOAD=false
+WORKDIR /code
+RUN pip install poetry
+COPY pyproject.toml poetry.lock /code/
+RUN poetry install --without dev
+COPY weather_api/ /code/weather_api/
 
-WORKDIR /src
+RUN groupadd -r fastapi && useradd -r -g fastapi fastapi
+USER fastapi
 
-RUN apt update -y
-RUN apt install g++ -y
-RUN pip install poetry==1.5.1
-COPY pyproject.toml poetry.lock ./
-RUN poetry config virtualenvs.create false
-RUN poetry install --without dev --no-root
-
-COPY app/weather_api ./app/weather_api
-COPY app/setup.py ./app/setup.py
-RUN pip install -e app
-
-ENV SERVER_HOST=0.0.0.0
-ENV SERVER_PORT=8080
-
-ENTRYPOINT python app/weather_api/main.py
+CMD ["python", "-m", "weather_api"]

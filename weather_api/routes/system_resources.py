@@ -5,7 +5,7 @@ from healthcheck import HealthCheck
 
 from weather_api.dependencies import get_met_service
 from weather_api.services.met_service import MetService
-from weather_api.version import __version__
+from weather_api.config import settings
 
 router = APIRouter()
 
@@ -21,7 +21,7 @@ async def ready(met: MetService = Depends(get_met_service)) -> Response:
 
     met_result: tuple[bool, str] = await met.health_check()
     health.add_check(lambda: (met_result[0], met_result[1]))
-    health.add_section("version", __version__)
+    health.add_section("version", settings.version)
 
     message, status_code, headers = health.run()
     return Response(content=message, headers=headers, status_code=status_code)
