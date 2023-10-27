@@ -8,11 +8,12 @@ def get_application() -> FastAPI:
     api = FastAPI(
         title="Weather API",
         version=settings.version,
+        description=settings.api_description,
         root_path=settings.api_root_path,
     )
 
-    api.include_router(system_resources.router)
     api.include_router(weather_routes.router)
+    api.include_router(system_resources.router)
     return api
 
 

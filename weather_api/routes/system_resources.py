@@ -10,12 +10,18 @@ from weather_api.config import settings
 router = APIRouter()
 
 
-@router.get("/health", tags=["health"])
+@router.get("/health",
+            summary="Check if this service is alive",
+            description="Returns a simple message to indicate that this service is alive",
+            tags=["health"])
 async def liveness() -> dict[str, str]:
     return {"message": "Ok"}
 
 
-@router.get("/ready", tags=["health"])
+@router.get("/ready",
+            summary="Check if this service is ready to receive requests",
+            description="Returns a message describing the status of this service",
+            tags=["health"])
 async def ready(met: MetService = Depends(get_met_service)) -> Response:
     health = HealthCheck()
 
