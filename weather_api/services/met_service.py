@@ -1,4 +1,4 @@
-import aiohttp
+from httpx import AsyncClient, Client
 from pydantic import TypeAdapter
 
 from weather_api.config import settings
@@ -7,35 +7,33 @@ from weather_api.models.met.weather_types import METJSONForecast
 
 
 class MetService:
+    @staticmethod
     async def get_weatherforecast(
-        self,
         lat: float,
         lon: float,
     ) -> METJSONForecast:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
+        async with AsyncClient() as client:
+            response = await client.get(
                 f"{settings.met_api_url}/locationforecast/2.0/complete",
                 params={"lat": lat, "lon": lon},
-            ) as response:
-                return TypeAdapter(METJSONForecast).validate_python(
-                    await response.json()
-                )
+            )
+            return TypeAdapter(METJSONForecast).validate_python(response.json())
 
-    async def get_sunrise(self, lat: float, lon: float, date: str) -> METJSONSunrise:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
+    @staticmethod
+    async def get_sunrise(lat: float, lon: float, date: str) -> METJSONSunrise:
+        async with AsyncClient() as client:
+            response = await client.get(
                 f"{settings.met_api_url}/sunrise/3.0/sun",
                 params={"lat": lat, "lon": lon, "date": date},
-            ) as response:
-                return TypeAdapter(METJSONSunrise).validate_python(
-                    await response.json()
-                )
+            )
+            return TypeAdapter(METJSONSunrise).validate_python(response.json())
 
-    async def health_check(self) -> tuple[bool, str]:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
+    @staticmethod
+    def met_healthcheck() -> tuple[bool, str]:
+        with Client() as client:
+            response = client.get(
                 f"{settings.met_api_url}/locationforecast/2.0/healthz"
-            ) as response:
-                if response.status == 200:
-                    return True, "Met API is healthy"
-                return False, "Met API is unhealthy"
+            )
+            if response.status_code == 200:
+                return True, "Met API is healthy"
+            return False, "Met API is unhealthy"
