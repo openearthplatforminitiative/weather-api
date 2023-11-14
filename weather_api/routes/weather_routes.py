@@ -15,7 +15,6 @@ router = APIRouter()
     summary="Get weather forecast",
     description="Returns the weather forecast for the next 9 days for the given location",
     tags=["weather"],
-    response_model=weather.METJSONForecast,
     response_model_exclude_none=True,
 )
 async def get_forecast(
@@ -38,7 +37,6 @@ async def get_forecast(
     summary="Get sunrise and sunset information",
     description="Returns the sunrise time and sunset time for the given location",
     tags=["weather"],
-    response_model=sunrise.METJSONSunrise,
     response_model_exclude_none=True,
 )
 async def get_sunrise(
