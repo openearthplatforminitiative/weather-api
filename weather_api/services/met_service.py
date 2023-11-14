@@ -11,11 +11,12 @@ class MetService:
     async def get_weatherforecast(
         lat: float,
         lon: float,
+        altitude: int,
     ) -> METJSONForecast:
         async with AsyncClient() as client:
             response = await client.get(
                 f"{settings.met_api_url}/locationforecast/2.0/complete",
-                params={"lat": lat, "lon": lon},
+                params={"lat": lat, "lon": lon, "altitude": altitude},
             )
             return TypeAdapter(METJSONForecast).validate_python(response.json())
 
