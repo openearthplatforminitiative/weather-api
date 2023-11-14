@@ -21,8 +21,16 @@ router = APIRouter()
 async def get_forecast(
     lat: Annotated[float, Query(title="lat", description="Latitude", example=60.10)],
     lon: Annotated[float, Query(title="lat", description="Longitude", example=9.58)],
+    altitude: Annotated[
+        int | None,
+        Query(
+            title="altitude",
+            description="Altitude above sea level in meters.",
+            example=100,
+        ),
+    ] = 0,
 ) -> weather.METJSONForecast:
-    return await MetService.get_weatherforecast(lat, lon)
+    return await MetService.get_weatherforecast(lat, lon, altitude)
 
 
 @router.get(
