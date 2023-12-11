@@ -29,7 +29,7 @@ app = get_application()
 @app.get("/redoc", include_in_schema=False)
 def redoc():
     return get_redoc_html(
-        openapi_url="/openapi.json",
+        openapi_url=f"{settings.api_root_path}/openapi.json",
         title="Weather API",
         redoc_favicon_url="https://www.openepi.io/favicon.ico",
     )
