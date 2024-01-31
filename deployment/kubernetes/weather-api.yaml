@@ -40,23 +40,29 @@ spec:
   selector:
     app: weather-api
 ---
-apiVersion: apisix.apache.org/v2
-kind: ApisixRoute
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: stripprefix-weather
+spec:
+  stripPrefix:
+    prefixes:
+      - /weather
+    forceSlash: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
 metadata:
   name: weather-api
 spec:
-  http:
-    - name: weather-api
-      match:
-        paths:
-          - /weather/*
-      backends:
-        - serviceName: weather-api
-          servicePort: 80
-      plugins:
-        - name: proxy-rewrite
-          enable: true
-          config:
-            regex_uri:
-              - "^/weather/(.*)"
-              - "/$1"
+  entryPoints:
+    - web
+  routes:
+  - kind: Rule
+    match: PathPrefix(`/weather`)
+    services:
+    - kind: Service
+      name: weather-api
+      port: 80
+    middlewares:
+    - name: stripprefix-weather
