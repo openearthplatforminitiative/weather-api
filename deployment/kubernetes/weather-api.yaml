@@ -19,6 +19,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: WHOAMI_PORT_NUMBER
+              value: "8080"
             - name: API_ROOT_PATH
               value: "/weather"
             - name: VERSION
@@ -65,4 +67,5 @@ spec:
       name: weather-api
       port: 80
     middlewares:
+    - name: forward-auth-forward-auth@kubernetescrd
     - name: stripprefix-weather
