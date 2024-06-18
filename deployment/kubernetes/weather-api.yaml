@@ -18,7 +18,7 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       containers:
-        - image: ghcr.io/openearthplatforminitiative/weather-api:0.1.3
+        - image: ghcr.io/openearthplatforminitiative/weather-api:logo-0.0.4
           name: weather-api
           ports:
             - containerPort: 8080

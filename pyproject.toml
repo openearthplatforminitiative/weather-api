@@ -13,8 +13,8 @@ pydantic = "^2.4.2"
 uvicorn = "^0.23.2"
 pydantic-settings = "^2.0.3"
 httpx = "^0.25.1"
-fastapi = "^0.110.1"
 prometheus-fastapi-instrumentator = "^7.0.0"
+fastapi = "^0.111.0"
 
 
 [tool.poetry.group.dev.dependencies]
