@@ -24,10 +24,6 @@ def custom_openapi(app: FastAPI, example_code_dir: Path):
         routes=app.routes,
     )
 
-    openapi_schema["info"]["x-logo"] = {
-        "url": f"{settings.api_url}/static/icons/open-epi-logo.svg"
-    }
-
     routes_that_need_doc = [
         route for route in app.routes if isinstance(route, APIRoute)
     ]
