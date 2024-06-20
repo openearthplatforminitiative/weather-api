@@ -2,7 +2,6 @@ import pathlib
 
 from fastapi import FastAPI
 from fastapi.openapi.docs import get_redoc_html
-from fastapi.staticfiles import StaticFiles
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from weather_api.config import settings
@@ -19,11 +18,6 @@ def get_application() -> FastAPI:
     )
     api.include_router(weather_routes.router)
     api.include_router(system_resources.router)
-    api.mount(
-        f"/static",
-        StaticFiles(directory=this_dir / "assets"),
-        name="static",
-    )
 
     api.openapi_schema = openapi.custom_openapi(api, this_dir / "example_code")
     Instrumentator().instrument(api).expose(api)
