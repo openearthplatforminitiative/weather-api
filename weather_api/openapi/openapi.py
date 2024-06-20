@@ -20,11 +20,12 @@ def custom_openapi(app: FastAPI, example_code_dir: Path):
         title="Weather API",
         version=settings.version,
         description=settings.api_description,
+        servers=[{"url": settings.api_url}],
         routes=app.routes,
     )
 
     openapi_schema["info"]["x-logo"] = {
-        "url": f"https://{settings.api_domain}/assets/icons/open-epi-logo.svg"
+        "url": f"{settings.api_url}/static/icons/open-epi-logo.svg"
     }
 
     routes_that_need_doc = [
