@@ -55,19 +55,6 @@ spec:
     forceSlash: true
 ---
 apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: cors-weather
-spec:
-  headers:
-    accessControlAllowMethods:
-      - "GET"
-    accessControlAllowHeaders:
-      - "*"
-    accessControlAllowOriginList:
-      - "*"
----
-apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: weather-api
@@ -76,11 +63,23 @@ spec:
     - websecure
   routes:
   - kind: Rule
-    match: PathPrefix(`/weather`) && !PathPrefix(`/weather/metrics`)
+    match: PathPrefix(`/weather`) && !PathPrefix(`/weather/metrics`) && HeadersRegexp(`Authorization`, `.+`)
     services:
     - kind: Service
       name: weather-api
       port: 80
     middlewares:
     - name: stripprefix-weather
-    - name: cors-weather
+    - name: traefikmiddleware-cors@kubernetescrd
+    - name: traefikmiddleware-jwt@kubernetescrd
+    - name: traefikmiddleware-rate-limit-registered@kubernetescrd
+  - kind: Rule
+    match: PathPrefix(`/weather`) && !PathPrefix(`/weather/metrics`) && !HeadersRegexp(`Authorization`, `.+`)
+    services:
+    - kind: Service
+      name: weather-api
+      port: 80
+    middlewares:
+    - name: stripprefix-weather
+    - name: traefikmiddleware-cors@kubernetescrd
+    - name: traefikmiddleware-rate-limit-anonymous@kubernetescrd
