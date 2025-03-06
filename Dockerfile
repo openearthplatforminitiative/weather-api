@@ -8,6 +8,8 @@ RUN poetry install --without dev --no-root
 COPY weather_api/ /code/weather_api/
 
 RUN groupadd -r fastapi && useradd -r -g fastapi fastapi
+RUN chown -R fastapi:fastapi /code
+
 USER fastapi
 
 CMD ["python", "-m", "weather_api"]
