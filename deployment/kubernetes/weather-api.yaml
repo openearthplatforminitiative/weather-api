@@ -18,7 +18,7 @@ spec:
         prometheus.io/path: "/metrics"
     spec:
       containers:
-        - image: ghcr.io/openearthplatforminitiative/weather-api:0.1.7
+        - image: ghcr.io/openearthplatforminitiative/weather-api:0.1.9
           name: weather-api
           ports:
             - containerPort: 8080
@@ -26,7 +26,7 @@ spec:
             - name: API_ROOT_PATH
               value: "/weather"
             - name: VERSION
-              value: "0.1.7"
+              value: "0.1.9"
             - name: API_DOMAIN
               valueFrom:
                 configMapKeyRef:
@@ -62,24 +62,24 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - kind: Rule
-    match: PathPrefix(`/weather`) && !PathPrefix(`/weather/metrics`) && HeadersRegexp(`Authorization`, `.+`)
-    services:
-    - kind: Service
-      name: weather-api
-      port: 80
-    middlewares:
-    - name: stripprefix-weather
-    - name: traefikmiddleware-cors@kubernetescrd
-    - name: traefikmiddleware-jwt@kubernetescrd
-    - name: traefikmiddleware-rate-limit-registered@kubernetescrd
-  - kind: Rule
-    match: PathPrefix(`/weather`) && !PathPrefix(`/weather/metrics`) && !HeadersRegexp(`Authorization`, `.+`)
-    services:
-    - kind: Service
-      name: weather-api
-      port: 80
-    middlewares:
-    - name: stripprefix-weather
-    - name: traefikmiddleware-cors@kubernetescrd
-    - name: traefikmiddleware-rate-limit-anonymous@kubernetescrd
+    - kind: Rule
+      match: PathPrefix(`/weather`) && !PathPrefix(`/weather/metrics`) && HeadersRegexp(`Authorization`, `.+`)
+      services:
+        - kind: Service
+          name: weather-api
+          port: 80
+      middlewares:
+        - name: stripprefix-weather
+        - name: traefikmiddleware-cors@kubernetescrd
+        - name: traefikmiddleware-jwt@kubernetescrd
+        - name: traefikmiddleware-rate-limit-registered@kubernetescrd
+    - kind: Rule
+      match: PathPrefix(`/weather`) && !PathPrefix(`/weather/metrics`) && !HeadersRegexp(`Authorization`, `.+`)
+      services:
+        - kind: Service
+          name: weather-api
+          port: 80
+      middlewares:
+        - name: stripprefix-weather
+        - name: traefikmiddleware-cors@kubernetescrd
+        - name: traefikmiddleware-rate-limit-anonymous@kubernetescrd
