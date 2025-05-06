@@ -7,6 +7,10 @@ from weather_api.models.met.weather_types import METJSONForecast
 
 
 class MetService:
+    headers = {
+        "User-Agent": "openepi.io github.com/openearthplatforminitiative/weather-api"
+    }
+
     @staticmethod
     async def get_weatherforecast(
         lat: float,
@@ -17,6 +21,7 @@ class MetService:
             response = await client.get(
                 f"{settings.met_api_url}/locationforecast/2.0/complete",
                 params={"lat": lat, "lon": lon, "altitude": altitude},
+                headers=MetService.headers,
             )
             return TypeAdapter(METJSONForecast).validate_python(response.json())
 
@@ -26,6 +31,7 @@ class MetService:
             response = await client.get(
                 f"{settings.met_api_url}/sunrise/3.0/sun",
                 params={"lat": lat, "lon": lon, "date": date},
+                headers=MetService.headers,
             )
             return TypeAdapter(METJSONSunrise).validate_python(response.json())
 
@@ -33,7 +39,8 @@ class MetService:
     def met_healthcheck() -> tuple[bool, str]:
         with Client() as client:
             response = client.get(
-                f"{settings.met_api_url}/locationforecast/2.0/healthz"
+                f"{settings.met_api_url}/locationforecast/2.0/healthz",
+                headers=MetService.headers,
             )
             if response.status_code == 200:
                 return True, "Met API is healthy"

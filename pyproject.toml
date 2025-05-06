@@ -1,15 +1,17 @@
-[tool.poetry]
+[project]
 name = "weather-api"
 version = "0.0.1"
 description = "API for providing weather information"
-authors = ["Kenneth Stigen <kenneth.stigen@knowit.no>"]
+authors = [
+  {name = "Kenneth Stigen", email = "kenneth.stigen@knowit.no"}
+]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 black = "^23.3.0"
 py-healthcheck = "^1.10.1"
-pydantic = "^2.4.2"
+pydantic = "^2.10.6"
 uvicorn = "^0.23.2"
 pydantic-settings = "^2.0.3"
 httpx = "^0.25.1"
